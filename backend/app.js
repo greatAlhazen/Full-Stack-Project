@@ -44,80 +44,78 @@ fs
 		console.log(`${resultsPlanet.length} planets found`);
 	});
 
-const http = require('http');
+// create and handle server framework
+const express = require('express');
+//initialize app
+const app = express();
 
-/* // for handling request
-const server = http.createServer((req, res) => {
-	// config header
-	res.writeHead(200, {
-		/* 'Content-Type': 'text/plain' */
-/* 	'Content-Type': 'application/json'
-	}); */
+/* // send text
+app.get('/text', (req, res) => {
+	res.send('hello from world');
+});
 
-// send data to user
-/* res.end(`hello from ${resultWithId[0]} `); */
-/* res.end(
-		JSON.stringify({
-			id: resultWithId[0].id,
-			planet: resultWithId[0].planet
-		})
-	);
-});  */
+// send json
+app.get('/json', (req, res) => {
+	res.send({
+		id: 1,
+		planet: 'kepler 469 b'
+	});
+});
 
-const server = http.createServer();
+// send html
+app.get('/html', (req, res) => {
+	res.send('<ul><li>hello</li></ul>');
+}); */
 
-// event when get request
-server.on('request', (req, res) => {
-	// handle request according to endpoint
-	const url = req.url.split('/');
-	// post request
-	if (req.method === 'POST' && url[1] === 'planets') {
-		req.on('data', (data) => {
-			// when data come covert string for log
-			const planet = data.toString();
-			console.log(planet);
-			// JSON parse data for add to array
-			resultWithId.push(JSON.parse(planet));
+// middleware that log method,url and req-res time
+app.use((req, res, next) => {
+	const reqTime = Date.now();
+	next();
+	const resTime = Date.now() - reqTime;
+	console.log(`${req.method} ${req.url} ${resTime}ms`);
+});
+
+// middleware that parse json object
+app.use(express.json());
+
+// post request
+app.post('/planets', (req, res) => {
+	if (!req.body.planet) {
+		return res.status(400).json({
+			error: 'please add one planet'
 		});
-		// readable stream to writable stream
-		req.pipe(res);
-	} else if (req.method === 'GET' && url[1] === 'planets') {
-		// get request
-		res.statusCode = 200;
-		res.setHeader('Content-Type', 'application/json');
+	}
+	const newPlanet = {
+		id: resultWithId.length,
+		planet: req.body.planet
+	};
+	resultWithId.push(newPlanet);
+	res.json(newPlanet);
+});
 
-		// parameterized urls
-		if (url.length === 3) {
-			const urlIndex = +url[2];
-			const item = resultWithId[urlIndex];
-			res.end(
-				JSON.stringify({
-					id: item.id,
-					planet: item.planet
-				})
-			);
-		} else {
-			res.end(
-				JSON.stringify({
-					resultWithId
-				})
-			);
-		}
-	} else if (req.method === 'GET' && url[1] === 'message') {
-		// get request
-		// send html response
-		res.setHeader('Content-Type', 'text/html');
-		res.write('<html>');
-		res.write('<body>');
-		res.write(`<p>Hello from ${resultWithId[0].planet}</p>`);
-		res.write('</body>');
-		res.write('</html>');
-		res.end();
+// send all data with json
+app.get('/planets', (req, res) => {
+	res.json(resultWithId);
+});
+
+// parameterized url
+app.get('/planets/:planetId', (req, res) => {
+	const planetId = req.params.planetId;
+	const planet = resultWithId[planetId];
+	if (planet) {
+		res.json(planet);
+	} else {
+		// send error status and message
+		res.status(400).json({ error: 'sorry,it is not found' });
 	}
 });
 
-// listen server on specific port
+app.get('/message', (req, res) => {
+	res.send(`<p>hello from ${resultWithId[0].planet}</p>`);
+});
+
+// server listen specific port
 const PORT = 3000;
-server.listen(PORT, () => {
-	console.log(`Server listen requests on ${PORT}`);
+app.listen(PORT, () => {
+	console.log(`application running on ${PORT}`);
 });
