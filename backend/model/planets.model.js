@@ -1,8 +1,8 @@
 const { parse } = require('csv-parse');
 const fs = require('fs');
+const path = require('path');
 
-let resultsPlanet = [];
-let resultWithId = [];
+let planets = [];
 
 // control habitable planet with some suggestion values
 const isHabitable = (planet) => {
@@ -15,35 +15,39 @@ const isHabitable = (planet) => {
 };
 
 // return a readeble stream
-fs
-	.createReadStream('planets_data.csv')
-	.pipe(
-		// connect readeble stream to writable stream
-		parse({
-			// comment block in file
-			comment: '#',
-			// for return key-value pairs
-			columns: true
-		})
-	)
-	.on('data', (data) => {
-		// event when data comes in
-		if (isHabitable(data)) {
-			resultsPlanet.push(data);
-		}
-	})
-	.on('error', (error) => {
-		// event when error occured
-		console.log(error);
-	})
-	.on('end', () => {
-		// event when stream end
-		resultsPlanet.forEach((item, index) => {
-			resultWithId.push({ id: index, planet: item['kepler_name'] });
-		});
+function loadData() {
+	new Promise((resolve, reject) => {
+		fs
+			.createReadStream(path.join(__dirname, '..', 'data', 'planets_data.csv'))
+			.pipe(
+				// connect readeble stream to writable stream
+				parse({
+					// comment block in file
+					comment: '#',
+					// for return key-value pairs
+					columns: true
+				})
+			)
+			.on('data', (data) => {
+				// event when data comes in
+				if (isHabitable(data)) {
+					planets.push(data);
+				}
+			})
+			.on('error', (error) => {
+				// event when error occured
+				console.log(error);
+				reject(error);
+			})
+			.on('end', () => {
+				// event when stream end
+				console.log(`${planets.length} planets found`);
+				resolve();
+			});
 	});
+}
 
 module.exports = {
-	resultsPlanet,
-	resultWithId
+	loadData,
+	planets
 };
