@@ -1,0 +1,18 @@
+{
+	"name": "nasa-rocket-project",
+	"version": "1.0.0",
+	"description": "Nasa rocket project main-root package manager",
+	"main": "index.js",
+	"scripts": {
+		"backend-install": "npm install --prefix backend",
+		"frontend-install": "npm install --prefix frontend",
+		"install-app": "npm run backend-install && npm run frontend-install",
+		"backend": "npm run watch --prefix backend",
+		"frontend": "npm start --prefix frontend",
+		"watch": "npm run backend & npm run frontend",
+		"deploy-app": "npm run build --prefix frontend && npm start --prefix backend"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}
