@@ -23,19 +23,19 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
     e.preventDefault();
     // setPendingLaunch(true);
     const data = new FormData(e.target);
-    const launchDate = new Date(data.get("launch-day"));
+    const date = new Date(data.get("launch-day"));
     const mission = data.get("mission-name");
     const rocket = data.get("rocket-name");
-    const target = data.get("planets-selector");
+    const destination = data.get("planets-selector");
     const response = await httpSubmitLaunch({
-      launchDate,
+      date,
       mission,
       rocket,
-      target,
+      destination,
     });
 
     // TODO: Set success based on response.
-    const success = false;
+    const success = response.ok;
     if (success) {
       getLaunches();
       setTimeout(() => {
@@ -51,7 +51,7 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
     const response = await httpAbortLaunch(id);
 
     // TODO: Set success based on response.
-    const success = false;
+    const success = response.ok;
     if (success) {
       getLaunches();
       onAbortSound();

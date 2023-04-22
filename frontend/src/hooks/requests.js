@@ -6,18 +6,39 @@ async function httpGetPlanets() {
 }
 
 async function httpGetLaunches() {
-	// TODO: Once API is ready.
-	// Load launches, sort by flight number, and return as JSON.
+	const response = await fetch(`${API_URL}/flights`);
+	const data = await response.json();
+	return data.sort((a,b) => {
+		return a.launchNumber > b.launchNumber
+	})
 }
 
-async function httpSubmitLaunch(launch) {
-	// TODO: Once API is ready.
-	// Submit given launch data to launch system.
+async function httpSubmitLaunch(flight) {
+	try {
+		return await fetch(`${API_URL}/flights`, {
+		  method: "post",
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		  body: JSON.stringify(flight),
+		});
+	  } catch(err) {
+		return {
+		  ok: false,
+		};
+	  }
 }
 
 async function httpAbortLaunch(id) {
-	// TODO: Once API is ready.
-	// Delete launch with given ID.
+	try{
+		return await fetch(`${API_URL}/flights/${id}`,{
+			method:'delete'
+		})
+	}catch(err){
+		return {
+			ok:'false'
+		}
+	}
 }
 
 export { httpGetPlanets, httpGetLaunches, httpSubmitLaunch, httpAbortLaunch };

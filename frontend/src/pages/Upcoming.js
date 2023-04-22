@@ -28,19 +28,19 @@ const Upcoming = props => {
   const tableBody = useMemo(() => {
     return launches?.filter((launch) => launch.upcoming)
       .map((launch) => {
-        return <tr key={String(launch.flightNumber)}>
+        return <tr key={String(launch.launchNumber)}>
           <td>
             <Clickable style={{color:"red"}}>
-              <Link className={classes.link} onClick={() => abortLaunch(launch.flightNumber)}>
+              <Link className={classes.link} onClick={() => abortLaunch(launch.launchNumber)}>
                 ✖
               </Link>
             </Clickable>
           </td>
-          <td>{launch.flightNumber}</td>
-          <td>{new Date(launch.launchDate).toDateString()}</td>
+          <td>{launch.launchNumber}</td>
+          <td>{new Date(launch.date).toDateString()}</td>
           <td>{launch.mission}</td>
           <td>{launch.rocket}</td>
-          <td>{launch.target}</td>
+          <td>{launch.destination}</td>
         </tr>;
       });
   }, [launches, abortLaunch, classes.link]);
@@ -52,6 +52,7 @@ const Upcoming = props => {
       <table style={{tableLayout: "fixed"}}>
         <thead>
           <tr>
+            <th style={{width: "3rem"}}></th>
             <th style={{width: "6rem"}}>Numara</th>
             <th style={{width: "10rem"}}>Tarih</th>
             <th style={{width: "11rem"}}>Görev</th>

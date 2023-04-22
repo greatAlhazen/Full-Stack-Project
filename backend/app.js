@@ -9,6 +9,7 @@ const app = express();
 
 // import routes
 const routerPlanets = require('./routes/planets.router');
+const routerFlights= require('./routes/flights.router');
 
 // cross-origin-resource-sharing config
 app.use(
@@ -25,12 +26,15 @@ app.use(morgan('combined'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// planets route middleware
+app.use('/planets',routerPlanets);
+
+// flights route middleware
+app.use('/flights',routerFlights);
+
 // serving website
-app.get('/', (req, res) => {
+app.get('/*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
-// planets route middleware
-app.use('/planets', routerPlanets);
 
 module.exports = app;
