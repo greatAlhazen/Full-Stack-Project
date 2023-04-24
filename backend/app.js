@@ -1,4 +1,4 @@
-/* // create and handle server framework
+// create and handle server framework
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -38,49 +38,5 @@ app.get('/*', (req, res) => {
 });
 
 module.exports = app;
- */
 
-const express = require('express');
-const cluster = require('cluster');
-const os = require('os');
-const app = express();
-
-// block request
-const loop = (time) => {
-	const startTime = Date.now();
-	while(Date.now() - startTime < time){
-	}
-}
-
-
-app.get('/',(req,res) => {
-	res.send(`My process id is ${process.pid}`);
-});
-
-// counter block time route
-app.get('/counter',(req,res) => {
-	loop(9000);
-	res.send(`My process id is ${process.pid}`);
-});
-
-// this executes 3 times, one in master, the two in worker 
-console.log('I execute three times')
-
-if(cluster.isMaster){
-	// run worker nodes equavilent to computer logical or physical cores
-	const NUM_PROCESS = os.cpus().length
-	for(let i=0; i<NUM_PROCESS; i++){
-		cluster.fork();
-	}
-	console.log('Master process');
-	/* // if master process is true run two worker process
-	cluster.fork();
-	cluster.fork(); */
-}else{
-	console.log('Worker process');
-	// server listen after worker processes
-	app.listen(3000,() => {
-		console.log('server listen...')
-	});
-}
 
