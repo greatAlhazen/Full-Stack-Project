@@ -1,4 +1,4 @@
-/* // create and handle server framework
+// create and handle server framework
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -38,24 +38,6 @@ app.get('/*', (req, res) => {
 });
 
 module.exports = app;
- */
 
-const {
-	Worker, isMainThread, workerData,
-  } = require('worker_threads');
 
-if(isMainThread){
-	// if main thread is true run two worker thread
-	new Worker(__filename,{
-		workerData: [2,6,9,8,5]
-	});
-	new Worker(__filename,{
-		workerData: [1,5,7,3,4]
-	});
-}else{
-	// difference between process workers run same process
-	console.log(`In the worker thread ${process.pid}`);
-	// sort operation will run different thread and data
-	console.log(`${workerData.sort()}`)
-}
 
