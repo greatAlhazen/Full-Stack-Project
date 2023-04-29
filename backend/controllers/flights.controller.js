@@ -1,7 +1,7 @@
 const { getAllFlights, setFlight, existFlight, abortFlight } = require("../model/flights.model");
 
-function getFlights(req,res){
-   return res.status(200).json(getAllFlights());
+async function getFlights(req,res){
+   return res.status(200).json(await getAllFlights());
 }
 
 function addFlight(req,res){
@@ -27,17 +27,26 @@ function addFlight(req,res){
     return res.status(201).json(flight);
 }
 
-function deleteFlight(req,res){
+async function deleteFlight(req,res){
     const id = Number(req.params.id);
     
-    if(!existFlight(id)){
+    const isFlight = await existFlight(id)
+    if(!isFlight){
         return res.status(400).json({
             error:'Flight not found'
         })
     }
 
-    const abort = abortFlight(id);
-    res.status(200).json(abort);
+    const abort = await abortFlight(id);
+    if(!abort){
+       return res.status(400).json({
+            error:'Flight not aborted'
+        });
+    }
+
+    res.status(200).json({
+        ok:true
+    });
 }
 
 module.exports = {
