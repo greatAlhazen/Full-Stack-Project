@@ -1,8 +1,6 @@
 const Flights = require('./flights.mongo');
 const Planets = require('./planets.mongo');
 
-let latestLaunchNumber = 125
-
 // example data
 const flight = {
     launchNumber:125,
@@ -20,23 +18,7 @@ save(flight);
 
 async function getAllFlights () {
     const response = await Flights.find({},{'_id':0,'__v':0});
-    console.log(response)
     return response
-}
-
-// save flight in mongo
-async function save(flight){
-    const planet = await Planets.findOne({
-        keplerName:flight.destination
-    });
-
-    if(!planet){
-        throw new Error('Planet not found');
-    }
-    await Flights.updateOne({
-        launchNumber:flight.launchNumber,
-    },flight,
-    {upsert:true});
 }
 
 async function getLatestNumber(){
@@ -64,6 +46,21 @@ async function existFlight(id){
    return await Flights.findOne({
     launchNumber:id
    });
+}
+
+// save flight in mongo
+async function save(flight){
+    const planet = await Planets.findOne({
+        keplerName:flight.destination
+    });
+
+    if(!planet){
+        throw new Error('Planet not found');
+    }
+    await Flights.updateOne({
+        launchNumber:flight.launchNumber,
+    },flight,
+    {upsert:true});
 }
 
 // delete flight
