@@ -7,9 +7,7 @@ const morgan = require('morgan');
 //initialize app
 const app = express();
 
-// import routes
-const routerPlanets = require('./routes/planets.router');
-const routerFlights= require('./routes/flights.router');
+const api = require('./routes/api');
 
 // cross-origin-resource-sharing config
 app.use(
@@ -26,11 +24,7 @@ app.use(morgan('combined'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// planets route middleware
-app.use('/planets',routerPlanets);
-
-// flights route middleware
-app.use('/flights',routerFlights);
+app.use('/v1',api);
 
 // serving website
 app.get('/*', (req, res) => {

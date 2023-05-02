@@ -22,7 +22,7 @@ describe('Test all api',() => {
     describe('Get route',() =>{
         test('should be 200 response',async () =>{
             
-            const res =await req(app).get('/flights').expect('Content-Type', /json/).expect(200); 
+            const res =await req(app).get('/v1/flights').expect('Content-Type', /json/).expect(200); 
         });
     });
     
@@ -41,7 +41,7 @@ describe('Test all api',() => {
     
         test('should be 201 response',async () => {
             const res = await req(app)
-            .post('/flights')
+            .post('/v1/flights')
             .send(flightData).expect('Content-Type',/json/).expect(201)
     
             const reqDate = new Date(flightData.date).valueOf();
@@ -53,7 +53,7 @@ describe('Test all api',() => {
     
         test('required field',async () => {
             const res = await req(app)
-            .post('/flights')
+            .post('/v1/flights')
             .send(withoutDate).expect('Content-Type',/json/).expect(400)
     
             expect(res.body).toStrictEqual({
@@ -63,7 +63,7 @@ describe('Test all api',() => {
     
         test('valid date',async () => {
             const res = await req(app)
-            .post('/flights')
+            .post('/v1/flights')
             .send(Object.assign(withoutDate,{date:'anything'}))
             .expect('Content-Type',/json/).expect(400)
     
