@@ -22,7 +22,7 @@ const History = props => {
 
   return <article id="history">
     <Appear animate show={props.entered}>
-      <Paragraph>History of mission launches including SpaceX launches starting from the year 2006.</Paragraph>
+      <Paragraph>2006'dan beri gönderilen spaceX'ler de dahil gönderilmiş rocketler.</Paragraph>
       <Table animate>
         <table style={{tableLayout: "fixed"}}>
           <thead>

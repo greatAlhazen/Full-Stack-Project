@@ -2,20 +2,6 @@ const axios = require('axios');
 const Flights = require('./flights.mongo');
 const Planets = require('./planets.mongo');
 
-// example data
-const flight = {
-    launchNumber:125,
-    mission:'Kepler discover',
-    rocket:'Terran 1',
-    destination:'Kepler-62 f',
-    date:new Date('October 12,2028'),
-    customers: ['GreatAlhazen','NASA'],
-    upcoming:true,
-    success:true,
-}
-
-save(flight);
-
 const SPACEX_API_URL = 'https://api.spacexdata.com/v5/launches/query';
 
 // load data from api
@@ -69,8 +55,11 @@ async function loadSpaceXApi() {
 }
 
 
-async function getAllFlights () {
-    const response = await Flights.find({},{'_id':0,'__v':0});
+async function getAllFlights (skip,limit) {
+    const response = await Flights.find({},{'_id':0,'__v':0})
+    .sort({launchNumber:-1})
+    .skip(skip)
+    .limit(limit);
     return response
 }
 

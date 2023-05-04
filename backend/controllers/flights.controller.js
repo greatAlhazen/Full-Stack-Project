@@ -1,7 +1,9 @@
+const calculatePagination = require("../config/query");
 const { getAllFlights, setFlight, existFlight, abortFlight } = require("../model/flights.model");
 
 async function getFlights(req,res){
-   return res.status(200).json(await getAllFlights());
+    const {skip,limit} = calculatePagination(req.query);
+   return res.status(200).json(await getAllFlights(skip,limit));
 }
 
 function addFlight(req,res){
