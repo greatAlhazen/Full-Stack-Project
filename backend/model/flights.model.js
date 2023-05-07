@@ -48,8 +48,6 @@ async function loadSpaceXApi() {
             success:flightDoc['success'],
             customers
         }
-
-        console.log(flight.mission);
         await save(flight);
       }
 }
