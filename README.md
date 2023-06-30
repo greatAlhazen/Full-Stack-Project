@@ -71,8 +71,6 @@ docker run -it -p <YOUR_PORT:8080> -t <YOUR_NAME>
 
 - After those, get into browser and go to specified http://localhost:<YOUR_PORT>
 
-- Clone the repo:
-
 ## Copyright
 
 Copyright 2023 [Enes Uraz](https://github.com/greatAlhazen)
